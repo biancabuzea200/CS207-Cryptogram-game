@@ -6,6 +6,19 @@ public class Player {
     private int numberCryptogramsPlayed;
     private int numberCryptogramsCompleted;
 
+    public Player(String userName)
+    {
+        name = userName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void updateAccuracy(boolean guessIsCorrect)
     {
         if (guessIsCorrect)
@@ -34,7 +47,7 @@ public class Player {
         return (double)correctGuesses / (double)totalGuesses;
     }
 
-    public double getNumCryptogramsCompleted()
+    public int getNumCryptogramsCompleted()
     {
         return numberCryptogramsCompleted;
     }
@@ -44,8 +57,10 @@ public class Player {
         return (double)totalCompletionTime / (double)numberCryptogramsCompleted;
     }
 
-    public double getNumCryptogramsPlayed()
+    public int getNumCryptogramsPlayed()
     {
         return numberCryptogramsPlayed;
     }
+
+
 }
