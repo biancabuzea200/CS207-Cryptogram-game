@@ -15,14 +15,19 @@ public class Players {
 
     public void removePlayer(Player playerToBeRemoved)
     {
-
+        for(Player player : allPlayers)
+        {
+            if(player.getName().equals(playerToBeRemoved)) {
+                allPlayers.remove(player);
+            }
+        }
     }
 
-    public Player findPlayer(String playerName)
+    public Player findPlayer(Player playerSeekedFor)
     {
         for(Player player : allPlayers)
         {
-            if(player.getName().equals(playerName)) {
+            if(player.equals(playerSeekedFor)) {
                 return player;
             }
         }
