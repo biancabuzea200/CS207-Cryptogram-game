@@ -1,9 +1,13 @@
+import java.util.HashMap;
+import java.util.Map;
+
 public class Game {
-    private Map <Integer, Char> playerGameMapping=new HashMap<Integer, Char>();
+    private Map<Integer, Character> playerGameMapping;
     private Player currentPlayer;
 
     public void loadPlayer(){
-        Player currentPlayer=new Player();
+        playerGameMapping = new HashMap<Integer, Character>();
+        // currentPlayer = new Player();
     }
 
     public void playGame(){
@@ -11,7 +15,6 @@ public class Game {
     }
 
     public void generateCryptogram(){
-
 
     }
 
@@ -24,7 +27,7 @@ public class Game {
     }
 
     public int viewFrequencies(){
-
+        return 0;
     }
 
     public void saveGame(){
