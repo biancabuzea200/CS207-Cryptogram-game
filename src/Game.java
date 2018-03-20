@@ -2,12 +2,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Game {
-    private Map<Integer, Character> playerGameMapping;
+    private Map<Integer, Character> playerSolution;
+    private boolean isLetterMapping;
+    private Players players;
     private Player currentPlayer;
 
-    public void loadPlayer(){
-        playerGameMapping = new HashMap<Integer, Character>();
-        // currentPlayer = new Player();
+    public void loadPlayer(Player player){
+        //playerSolution = new HashMap<Integer, Character>();
+        currentPlayer = players.findPlayer(player);
+        if(currentPlayer != null)
+        {
+            System.err.println("No player " + player.getName() + " found.");
+        }
+        else
+        {
+            System.out.println("Player" + player.getName() + " added.");
+        }
     }
 
     public void playGame(){
@@ -26,7 +36,7 @@ public class Game {
 
     }
 
-    public int viewFrequencies(){
+    public int viewFrequencies() {
         return 0;
     }
 
