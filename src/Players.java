@@ -1,9 +1,14 @@
+/**
+ * Hristo Yordanov
+ */
+
 import java.util.ArrayList;
 
 public class Players {
     private ArrayList<Player> allPlayers;
+    private static Players instance;
 
-    public Players()
+    private Players()
     {
         allPlayers = new ArrayList<Player>();
     }
@@ -72,5 +77,31 @@ public class Players {
             allPlayersCompletedCryptograms.add(player.getNumCryptogramsCompleted());
         }
         return allPlayersCompletedCryptograms;
+    }
+
+    public void loadPlayers()
+    {
+        // load players from file so we can keep track of players when the application is started more than once
+    }
+
+    public static Players getInstance() {
+        if (instance == null)
+        {
+            instance = new Players();
+        }
+        return instance;
+    }
+
+    public void printPlayers()
+    {
+        for (Player pl : allPlayers)
+        {
+            System.out.println("player <" + pl.getName() + ">");
+        }
+    }
+
+    public void savePlayers()
+    {
+
     }
 }

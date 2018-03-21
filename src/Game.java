@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Game {
     private Map<Integer, Character> playerSolution;
@@ -7,17 +8,24 @@ public class Game {
     private Players players;
     private Player currentPlayer;
 
-    public void loadPlayer(Player player){
-        //playerSolution = new HashMap<Integer, Character>();
-        currentPlayer = players.findPlayer(player);
-        if(currentPlayer != null)
+    public Game() {
+        playerSolution = new HashMap<Integer, Character>();
+        players = Players.getInstance();
+    }
+
+    public void loadPlayer(){
+        Scanner scanner = new Scanner(System.in);
+        String username;
+        System.out.println("Please select your username:");
+        username = scanner.nextLine();
+        Player player = new Player(username);
+        if(players.findPlayer(player)== null)
         {
-            System.err.println("No player " + player.getName() + " found.");
+            players.addPlayer(player);
         }
-        else
-        {
-            System.out.println("Player" + player.getName() + " added.");
-        }
+        currentPlayer = player;
+            System.out.println("Player <" + player.getName() + "> loaded.");
+
     }
 
     public void playGame(){
@@ -48,4 +56,13 @@ public class Game {
 
     }
 
+    public Player getCurrentPlayer()
+    {
+        return currentPlayer;
+    }
+
+    public void printPlayers()
+    {
+        players.printPlayers();
+    }
 }
