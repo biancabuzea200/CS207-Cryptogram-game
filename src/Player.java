@@ -58,5 +58,38 @@ public class Player {
         return numberCryptogramsPlayed;
     }
 
+    public int getCorrectGuesses()
+    {
+        return correctGuesses;
+    }
 
+    public int getTotalGuesses()
+    {
+        return totalGuesses;
+    }
+
+    public int getTotalCompletionTime()
+    {
+        return totalCompletionTime;
+    }
+
+    public void setCorrectGuesses(int correctGuesses) {
+        this.correctGuesses = correctGuesses;
+    }
+
+    public void setTotalGuesses(int totalGuesses) {
+        this.totalGuesses = totalGuesses;
+    }
+
+    public void setTotalCompletionTime(int totalCompletionTime) {
+        this.totalCompletionTime = totalCompletionTime;
+    }
+
+    public void setNumberCryptogramsPlayed(int numberCryptogramsPlayed) {
+        this.numberCryptogramsPlayed = numberCryptogramsPlayed;
+    }
+
+    public void setNumberCryptogramsCompleted(int numberCryptogramsCompleted) {
+        this.numberCryptogramsCompleted = numberCryptogramsCompleted;
+    }
 }
