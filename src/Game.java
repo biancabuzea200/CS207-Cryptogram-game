@@ -60,9 +60,4 @@ public class Game {
     {
         return currentPlayer;
     }
-
-    public void printPlayers()
-    {
-        players.printPlayers();
-    }
 }

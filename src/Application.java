@@ -33,7 +33,7 @@ public class Application {
                      HelpMessages.getInstance().printHelpMessages();
                      break;
                 case "print":
-                    game.printPlayers();
+                    players.printPlayers();
                     break;
                  case "exit":
                      applicationRunning = false;

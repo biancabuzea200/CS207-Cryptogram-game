@@ -148,6 +148,9 @@ public class Players {
 
     }
 
+
+    // help method
+    // will be deleted for submission
     public void printPlayers()
     {
         for (Player pl : allPlayers)
