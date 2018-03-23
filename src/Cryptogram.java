@@ -5,18 +5,18 @@ import java.util.*;
 public class Cryptogram {
 
     // Mapping of numbers (1 .. 26) to correct characters
-    protected Map<Integer, Character> mapping;
+    private Map<Integer, Character> mapping;
 
     // The original quote containing letters and spaces
-    protected String originalQuote;
+    private String originalQuote;
 
     // The mapped quote containing numbers (1 .. 26) for crypted letters and
     // 0 to represent spaces
-    protected int[] mappedQuote;
+    private int[] mappedQuote;
 
     // Map of numbers (1 .. 26) to frequencies, generated on demand when
     // getFrequencies() is called
-    protected Map<Integer, Integer> frequencies;
+    private Map<Integer, Integer> frequencies;
 
 
     // Build a Cryptogram using a given quote, and generate a mapping for it
@@ -165,5 +165,10 @@ public class Cryptogram {
 
     public String getOriginalQuote() {
         return originalQuote;
+    }
+
+
+    public Map<Integer, Character> getMapping() {
+        return mapping;
     }
 }
