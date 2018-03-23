@@ -1,34 +1,113 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Cryptogram {
 
-    protected Map<Character, Character> letter_mapping;
+    // Mapping of numbers (1 .. 26) to correct characters
+    protected Map<Integer, Character> mapping;
 
-    public Cryptogram() {
-        letter_mapping = new HashMap<Character, Character>();
-    }
+    // The original quote containing letters and spaces
+    protected String originalQuote;
 
-    public void generateCryptogram(String type)
+    // The mapped quote containing numbers (1 .. 26) for crypted letters and
+    // 0 to represent spaces
+    protected int[] mappedQuote;
+
+    // Map of numbers (1 .. 26) to frequencies, generated on demand when
+    // getFrequencies() is called
+    protected Map<Integer, Integer> frequencies;
+
+
+    // Build a Cryptogram using a given quote, and generate a mapping for it
+    public Cryptogram(String originalQuote)
     {
-        //String quote = getQuote();
-        if(type.toLowerCase().equals("letter"))
-        {
-
-        }
-        else if (type.toLowerCase().equals("number"))
-        {
-
-        }
-
-
+        generateMapping(originalQuote);
     }
 
-    public String getQuote()
+
+    // Build a Cryptogram using a previously generated mapping
+    // (for use when an old state of play is being loaded)
+    public Cryptogram(int[] mappedQuote, Map<Integer, Character> mapping)
+    {
+        this.mappedQuote = mappedQuote;
+        this.mapping = mapping;
+
+        // We don't have the original quote, but we can compute it from
+        // the mapped version and the mapping itself
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < mappedQuote.length; i++)
+        {
+            if (mappedQuote[i] == 0)
+                builder.append(' ');
+            else
+                builder.append(mapping.get(mappedQuote[i]));
+        }
+    }
+
+
+    // Construct a brand new mapping for a given quote
+    private void generateMapping(String quote)
+    {
+        originalQuote = quote;
+        mappedQuote = new int[originalQuote.length()];
+        Random random = new Random();
+
+        mapping = new HashMap<>();
+        Map<Character, Integer> reverseMapping = new HashMap<>();
+
+        for (int i = 0; i < originalQuote.length(); i++)
+        {
+            char c = Character.toUpperCase(originalQuote.charAt(i));
+
+            if (c == ' ') {
+                // Spaces simply map to zero
+                mappedQuote[i] = 0;
+            } else if (reverseMapping.containsKey(c)) {
+                // We've already mapped this character, so just use that
+                mappedQuote[i] = reverseMapping.get(c);
+            } else {
+                // We need to map this character to something!
+                int mapTo = selectUnusedMapIndex(random, c);
+
+                // We have an index now, so record it
+                mapping.put(mapTo, c);
+                reverseMapping.put(c, mapTo);
+
+                // ...and don't forget to add it to the quote array itself
+                mappedQuote[i] = mapTo;
+            }
+        }
+    }
+
+
+    // Randomly pick an unused mapping index that can be used to represent
+    // the given character
+    private int selectUnusedMapIndex(Random random, char c)
+    {
+        if (c < 'A' || c > 'Z')
+            throw new IllegalArgumentException("Quote contains invalid character (not a letter or a space)");
+
+        // Turn the character into an index from 1 to 26
+        int origIndex = (c - 'A' + 1);
+
+        // We want to pick something that:
+        //  1) has not already been mapped
+        //  2) is not equal to origIndex (i.e. we don't map E -> E)
+        int mapTo;
+        do
+        {
+            mapTo = 1 + random.nextInt(26);
+        }
+        while (mapTo == origIndex || mapping.containsKey(mapTo));
+
+        return mapTo;
+    }
+
+
+    // Load a random quote from the quotes database
+    // (TODO: Select one depending on type -- historical or pop culture)
+    public static String getRandomQuote()
     {
         String[] quotes = new String[50];
         String line;
@@ -56,5 +135,35 @@ public class Cryptogram {
         Random random = new Random();
         int randomIndex = random.nextInt(index);
         return quotes[randomIndex];
+    }
+
+
+    public Map<Integer, Integer> getFrequencies() {
+        if (frequencies != null)
+            return frequencies;
+
+        frequencies = new HashMap<>();
+        for (int i = 0; i < mappedQuote.length; i++)
+        {
+            int mappedValue = mappedQuote[i];
+            if (mappedValue > 0)
+            {
+                int oldCount = frequencies.getOrDefault(mappedValue, 0);
+                int newCount = oldCount + 1;
+                frequencies.put(mappedValue, newCount);
+            }
+        }
+
+        return frequencies;
+    }
+
+
+    public int[] getMappedQuote() {
+        return mappedQuote;
+    }
+
+
+    public String getOriginalQuote() {
+        return originalQuote;
     }
 }
