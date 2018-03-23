@@ -49,7 +49,7 @@ public class Cryptogram {
     // Construct a brand new mapping for a given quote
     private void generateMapping(String quote)
     {
-        originalQuote = quote;
+        originalQuote = quote.toUpperCase();
         mappedQuote = new int[originalQuote.length()];
         Random random = new Random();
 
@@ -58,7 +58,7 @@ public class Cryptogram {
 
         for (int i = 0; i < originalQuote.length(); i++)
         {
-            char c = Character.toUpperCase(originalQuote.charAt(i));
+            char c = originalQuote.charAt(i);
 
             if (c == ' ') {
                 // Spaces simply map to zero
