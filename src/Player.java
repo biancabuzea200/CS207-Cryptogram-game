@@ -40,6 +40,8 @@ public class Player {
     public double getAccuracy()
     {
         // returns a value from 0 to 1
+        if(totalGuesses == 0)
+            return 0;
         return (double)correctGuesses / (double)totalGuesses;
     }
 
@@ -50,6 +52,8 @@ public class Player {
 
     public double getAverageTime()
     {
+        if(numberCryptogramsCompleted == 0)
+            return 0;
         return (double)totalCompletionTime / (double)numberCryptogramsCompleted;
     }
 

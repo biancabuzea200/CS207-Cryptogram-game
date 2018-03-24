@@ -26,13 +26,17 @@ public class Game {
         System.out.println("Please select your username:");
         username = scanner.nextLine();
         Player player = new Player(username);
-        if(players.findPlayer(player)== null)
+        Player p = players.findPlayer(player);
+        if(p == null)
         {
             players.addPlayer(player);
+            currentPlayer = player;
         }
-        currentPlayer = player;
-            System.out.println("Player <" + player.getName() + "> loaded.");
-
+        else
+        {
+            currentPlayer = p;
+        }
+        System.out.println("Player <" + player.getName() + "> loaded.");
     }
 
     public void playGame(){
