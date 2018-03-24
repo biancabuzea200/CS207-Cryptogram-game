@@ -29,6 +29,9 @@ public class Application {
                  case "load game":
                      game.loadGame();
                      break;
+                case "view scoreboard":
+                    players.viewScoreboard();
+                    break;
                  case "help":
                      HelpMessages.getInstance().printHelpMessages();
                      break;

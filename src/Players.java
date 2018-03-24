@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class Players {
@@ -35,7 +37,7 @@ public class Players {
     {
         for(Player player : allPlayers)
         {
-            if(player.getName().equals(playerToBeRemoved)) {
+            if(player.getName().equals(playerToBeRemoved.getName())) {
                 allPlayers.remove(player);
             }
         }
@@ -45,7 +47,7 @@ public class Players {
     {
         for(Player player : allPlayers)
         {
-            if(player.equals(playerSeekedFor)) {
+            if(player.getName().equals(playerSeekedFor.getName())) {
                 return player;
             }
         }
@@ -121,15 +123,15 @@ public class Players {
                 try
                 {
                     value = Integer.parseInt(tokens[1]);
-                    player.setCorrectGuesses(value);
+                    player.setCorrectGuesses(value);        // percentage of guess accuracy
                     value = Integer.parseInt(tokens[2]);
-                    player.setTotalGuesses(value);
+                    player.setTotalGuesses(value);          // percentage of guess accuracy
                     value = Integer.parseInt(tokens[3]);
-                    player.setTotalCompletionTime(value);
+                    player.setTotalCompletionTime(value);   // lowest average time to solve cryptograms
                     value = Integer.parseInt(tokens[4]);
-                    player.setNumberCryptogramsPlayed(value);
+                    player.setNumberCryptogramsPlayed(value); // number of cryptograms played
                     value = Integer.parseInt(tokens[5]);
-                    player.setNumberCryptogramsCompleted(value);
+                    player.setNumberCryptogramsCompleted(value); // number of cryptograms completed
                 }
                 catch(NumberFormatException e)
                 {
@@ -183,6 +185,57 @@ public class Players {
             fileWriter.close();
         } catch (IOException e) {
             System.err.println("Error closing the file: " + playersFile.getName());
+        }
+    }
+
+    public void viewScoreboard()
+    {
+        System.out.println("How do you want to sort the scoreboard?");
+        System.out.println("Please provide a number from 1 to 4.");
+
+        System.out.println("1. By lowest average time");
+        System.out.println("2. By percent of guess accuracy");
+        System.out.println("3. By number of cryptograms played");
+        System.out.println("4. By number of cryptograms completed");
+
+        Scanner reader = new Scanner(System.in);
+        String input = reader.next();
+        int option;
+        try
+        {
+            option = Integer.parseInt(input);
+        }
+        catch(Exception e)
+        {
+            System.out.println("Wrong input");
+            return;
+        }
+        switch(option)
+        {
+            case 1:
+                allPlayers.sort(Comparator.comparing(Player::getAverageTime).reversed());
+                break;
+            case 2:
+                allPlayers.sort(Comparator.comparing(Player::getAccuracy).reversed());
+                break;
+            case 3:
+                allPlayers.sort(Comparator.comparing(Player::getNumCryptogramsPlayed).reversed());
+                break;
+            case 4:
+                allPlayers.sort(Comparator.comparing(Player::getNumCryptogramsCompleted).reversed());
+                break;
+            default:
+                System.err.println("Invalid sort option.");
+                return;
+        }
+
+        System.out.println("Name \t\t\t Lowest Avg Time \t Percent Of Guess \t No. Cryptograms Played \t No. Cryptograms Completed");
+        for(Player player: allPlayers)
+        {
+            String output = String.format("%-15s %7.3f \t\t\t %3.3f \t\t\t\t %3d \t\t\t\t\t\t\tB %3d",
+                                          player.getName(), player.getAverageTime(), player.getAccuracy(),
+                                          player.getNumCryptogramsPlayed(), player.getNumCryptogramsCompleted());
+            System.out.println(output);
         }
     }
 }
