@@ -36,6 +36,9 @@ public class Game {
         System.out.println("Player <" + player.getName() + "> loaded.");
     }
 
+    // testing stuff for now
+
+
     public void playGame() {
         // For now we just start a new game, and assume that number mapping
         // is being used
@@ -45,6 +48,8 @@ public class Game {
         while(true)
         {
             enterLetter();
+            displayCryptogram();
+            undoLetter();
             displayCryptogram();
             if(isLastLetter())
             {
@@ -94,6 +99,21 @@ public class Game {
     }
 
     public void undoLetter() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Please select a letter from the Cryptogram to remove its mapped value.");
+        System.out.print("Clear Letter:");
+        String line = scanner.nextLine().toUpperCase();
+        if(line == null)
+        {
+            return;
+        }
+        char keyChar = line.charAt(0);
+        if(line.length() != 1)
+        {
+            System.err.println("Incorrect letter!");
+        }
+        int keyInteger = (keyChar - 'A' + 1);
+        playerSolution.remove(keyInteger);
 
     }
 
