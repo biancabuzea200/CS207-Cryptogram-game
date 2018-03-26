@@ -20,44 +20,80 @@ public class Game {
         players = Players.getInstance();
     }
 
-    public void loadPlayer(){
+    public void loadPlayer() {
         Scanner scanner = new Scanner(System.in);
         String username;
         System.out.println("Please select your username:");
         username = scanner.nextLine();
         Player player = new Player(username);
         Player p = players.findPlayer(player);
-        if(p == null)
-        {
+        if (p == null) {
             players.addPlayer(player);
             currentPlayer = player;
-        }
-        else
-        {
+        } else {
             currentPlayer = p;
         }
         System.out.println("Player <" + player.getName() + "> loaded.");
     }
 
-    public void playGame(){
+    public void playGame() {
         // For now we just start a new game, and assume that number mapping
         // is being used
         isLetterMapping = true;
         generateCryptogram();
+
+        while(true)
+        {
+            enterLetter();
+            displayCryptogram();
+            if(isLastLetter())
+            {
+                checkSolution();
+                return;
+            }
+        }
     }
 
-    public void generateCryptogram(){
+    public void generateCryptogram() {
         cryptogram = new Cryptogram(Cryptogram.getRandomQuote());
         playerSolution = new HashMap<Integer, Character>();
 
         displayCryptogram();
     }
 
-    public void enterLetter(){
+    public void enterLetter() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Please select a letter from the Cryptogram to map a value to it.");
+        System.out.print("Letter:");
+        String line = scanner.nextLine().toUpperCase();
+        if(line == null)
+        {
+            return;
+        }
+        char keyChar = line.charAt(0);
+        if(line.length() != 1)
+        {
+            System.err.println("Incorrect letter!");
+        }
+        int keyInteger = (keyChar - 'A' + 1);
+        System.out.println("What enter would you like to enter/change it to?");
+        System.out.print("Letter:");
+        line = scanner.nextLine().toUpperCase();
+        if(line == null)
+        {
+            return;
+        }
+        char value = line.charAt(0);
+        if(line.length() != 1)
+        {
+            System.err.println("Incorrect letter!");
+        }
+
+        playerSolution.put(keyInteger, value);
 
     }
 
-    public void undoLetter(){
+    public void undoLetter() {
 
     }
 
@@ -65,52 +101,43 @@ public class Game {
         return 0;
     }
 
-    public void saveGame(){
+    public void saveGame() {
 
     }
 
-    public void loadGame(){
+    public void loadGame() {
 
     }
 
-    public Player getCurrentPlayer()
-    {
+    public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
 
     // Show the current state: the encrypted quote, and which letters (if any)
     // have been entered for each bit
-    private void displayCryptogram()
-    {
+    private void displayCryptogram() {
         int letterWidth = isLetterMapping ? 2 : 3;
         int lettersThatFit = CONSOLE_WIDTH / letterWidth;
         int nextLineStart = 0;
         int[] mappedQuote = cryptogram.getMappedQuote();
 
         // Let's be fancy and split the quote up into words
-        while (nextLineStart < mappedQuote.length)
-        {
+        while (nextLineStart < mappedQuote.length) {
             // What can we print on this line?
             int startIndex = nextLineStart;
             int endIndex = nextLineStart + lettersThatFit;
 
-            if (endIndex >= mappedQuote.length)
-            {
+            if (endIndex >= mappedQuote.length) {
                 // We've reached the end of the quote
                 endIndex = mappedQuote.length;
                 nextLineStart = endIndex;
-            }
-            else
-            {
+            } else {
                 // We're in the middle of the quote
-                if (mappedQuote[endIndex] == 0)
-                {
+                if (mappedQuote[endIndex] == 0) {
                     // This is a space, so continue the next line after it
                     nextLineStart = endIndex + 1;
-                }
-                else
-                {
+                } else {
                     // We are in the middle of a word, so let's find the
                     // previous space (if possible)
                     int spaceSearch = endIndex;
@@ -118,14 +145,11 @@ public class Game {
                         --spaceSearch;
 
                     // Did we find one?
-                    if (mappedQuote[spaceSearch] == 0)
-                    {
+                    if (mappedQuote[spaceSearch] == 0) {
                         // Yes, so cut things off here
                         endIndex = spaceSearch;
                         nextLineStart = spaceSearch + 1;
-                    }
-                    else
-                    {
+                    } else {
                         // No, so just cut off here, we have no choice
                         nextLineStart = endIndex;
                     }
@@ -139,17 +163,14 @@ public class Game {
     // Display the current state of play for a piece of the cryptogram
     // This is used to display the cryptogram spread across multiple lines
     // for long quotes
-    private void displayPieceOfCryptogram(int startIndex, int endIndex)
-    {
+    private void displayPieceOfCryptogram(int startIndex, int endIndex) {
         StringBuilder mappingLine = new StringBuilder();
         StringBuilder userInputLine = new StringBuilder();
 
         int[] mappedQuote = cryptogram.getMappedQuote();
 
-        for (int i = startIndex; i < endIndex; i++)
-        {
-            if (i > startIndex)
-            {
+        for (int i = startIndex; i < endIndex; i++) {
+            if (i > startIndex) {
                 // All characters but the very first get spacing before them
                 mappingLine.append(' ');
                 userInputLine.append(' ');
@@ -157,22 +178,16 @@ public class Game {
 
             int mapNumber = mappedQuote[i];
 
-            if (mapNumber == 0)
-            {
+            if (mapNumber == 0) {
                 // Spaces don't get mapped, so we just add empty space
                 String spacing = isLetterMapping ? " " : "  ";
                 mappingLine.append(spacing);
                 userInputLine.append(spacing);
-            }
-            else
-            {
+            } else {
                 // Display a letter or number
-                if (isLetterMapping)
-                {
-                    mappingLine.append((char)('A' - 1 + mapNumber));
-                }
-                else
-                {
+                if (isLetterMapping) {
+                    mappingLine.append((char) ('A' - 1 + mapNumber));
+                } else {
                     // Add an extra space so things line up
                     userInputLine.append(' ');
                     mappingLine.append(String.format("%2d", mapNumber));
@@ -188,4 +203,16 @@ public class Game {
         System.out.println(mappingLine.toString());
         System.out.println(userInputLine.toString());
     }
+
+    private void checkSolution()
+    {
+
+    }
+
+    // Checks if player's solution is same size as mapping.
+    private boolean isLastLetter()
+    {
+        return playerSolution.keySet().size() == cryptogram.getMapping().size();
+    }
+
 }
