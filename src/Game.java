@@ -49,6 +49,8 @@ public class Game {
         {
             enterLetter();
             displayCryptogram();
+            getHint();
+            displayCryptogram();
             undoLetter();
             displayCryptogram();
             if(isLastLetter())
@@ -233,6 +235,27 @@ public class Game {
     private boolean isLastLetter()
     {
         return playerSolution.keySet().size() == cryptogram.getMapping().size();
+    }
+
+    // gets a hint (fills one letter in the solution that a player hasn't mapped a value to
+    private void getHint()
+    {
+        for(char charValue : cryptogram.getMapping().values())
+        {
+            if(!playerSolution.containsKey(charValue))
+            {
+                for(int letterInteger : cryptogram.getMapping().keySet())
+                {
+                    if(cryptogram.getMapping().get(letterInteger) == charValue)
+                    {
+                        char letterChar = (char)(letterInteger + 'A' - 1);
+                        playerSolution.put(letterInteger, charValue);
+                        System.out.println("Hint: " + letterChar + " is mapped to " + charValue + ".");
+                        return;
+                    }
+                }
+            }
+        }
     }
 
 }
