@@ -171,4 +171,34 @@ public class Cryptogram {
     public Map<Integer, Character> getMapping() {
         return mapping;
     }
+
+
+    public static String encodeMappingToString(Map<Integer, Character> mapping)
+    {
+        StringBuilder builder = new StringBuilder();
+
+        for (int i = 1; i <= 26; i++)
+        {
+            builder.append(mapping.getOrDefault(i, '.'));
+        }
+
+        return builder.toString();
+    }
+
+    public static Map<Integer, Character> decodeMappingFromString(String str)
+    {
+        if (str.length() != 26)
+            throw new IllegalArgumentException("encoded mapping not the correct length");
+
+        Map<Integer, Character> mapping = new HashMap<>();
+
+        for (int i = 1; i <= 26; i++)
+        {
+            char c = str.charAt(i - 1);
+            if (c != '.')
+                mapping.put(i, c);
+        }
+
+        return mapping;
+    }
 }
