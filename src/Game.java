@@ -58,11 +58,43 @@ public class Game {
 
         while(true)
         {
-            enterLetter();
+            switch(enterLetter())
+            {
+                case 0:
+                    break;
+                case -1:
+                    continue;
+                case -2:
+                    isLetterMapping = true;
+                    generateCryptogram();
+
+                    secondsTaken = 0;
+                    gameStartTimestamp = new Date();
+
+                    continue;
+                case -3:
+                    return;
+            }
             displayCryptogram();
             getHint();
             displayCryptogram();
-            undoLetter();
+            switch(undoLetter())
+            {
+                case 0:
+                    break;
+                case -1:
+                    continue;
+                case -2:
+                    isLetterMapping = true;
+                    generateCryptogram();
+
+                    secondsTaken = 0;
+                    gameStartTimestamp = new Date();
+
+                    continue;
+                case -3:
+                    return;
+            }
             displayCryptogram();
             if(isLastLetter())
             {
@@ -80,14 +112,40 @@ public class Game {
         displayCryptogram();
     }
 
-    public void enterLetter() {
+    private int printHelp()
+    {
+        System.out.println("======= HELP =======");
+        System.out.println("\"continue\" - continue the game");
+        System.out.println("\"new cryptogram\" - discard the current cryptogram and generate a new one");
+        System.out.println("\"exit\" - exit the game and return to main page");
+
+        Scanner scanner = new Scanner(System.in);
+        String line = scanner.nextLine().toLowerCase();
+        switch (line) {
+            case "continue":
+                return -1;
+            case "new cryptogram":
+                return -2;
+            case "exit":
+                return -3;
+            default:
+                System.out.println("Wrong command");
+                return 0;
+        }
+    }
+
+    public int enterLetter() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please select a letter from the Cryptogram to map a value to it.");
         System.out.print("Letter:");
         String line = scanner.nextLine().toUpperCase();
+        if(line.equals("HELP"))
+        {
+            return printHelp();
+        }
         if(line == null)
         {
-            return;
+            return -1;
         }
         char keyChar = line.charAt(0);
         if(line.length() != 1)
@@ -100,7 +158,7 @@ public class Game {
         line = scanner.nextLine().toUpperCase();
         if(line == null)
         {
-            return;
+            return -1;
         }
         char value = line.charAt(0);
         if(line.length() != 1)
@@ -109,17 +167,21 @@ public class Game {
         }
 
         playerSolution.put(keyInteger, value);
-
+        return 0;
     }
 
-    public void undoLetter() {
+    public int undoLetter() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please select a letter from the Cryptogram to remove its mapped value.");
         System.out.print("Clear Letter:");
         String line = scanner.nextLine().toUpperCase();
+        if(line.equals("HELP"))
+        {
+            return printHelp();
+        }
         if(line == null)
         {
-            return;
+            return -1;
         }
         char keyChar = line.charAt(0);
         if(line.length() != 1)
@@ -128,7 +190,7 @@ public class Game {
         }
         int keyInteger = (keyChar - 'A' + 1);
         playerSolution.remove(keyInteger);
-
+        return 0;
     }
 
     public int viewFrequencies() {
