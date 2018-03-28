@@ -58,12 +58,21 @@ public class Game {
 
         while(true)
         {
-            enterLetter();
+            getHint();
             displayCryptogram();
             getHint();
             displayCryptogram();
-            undoLetter();
+            getHint();
             displayCryptogram();
+            getHint();
+            displayCryptogram();
+            getHint();
+            displayCryptogram();
+            enterLetter();
+            displayCryptogram();
+
+//            undoLetter();
+//            displayCryptogram();
             if(isLastLetter())
             {
                 checkSolution();
@@ -312,6 +321,16 @@ public class Game {
         }
     }
 
+    private void showSolution()
+    {
+        HashMap<Integer, Character> solution = (HashMap<Integer,Character>) cryptogram.getMapping();
+        Map<Integer, Character> temp = playerSolution;
+        playerSolution = solution;
+        System.out.println("* * * SHOWING SOLUTION * * *");
+        displayCryptogram();
+        playerSolution = temp;
+    }
+
     // Checks if player's solution is same size as mapping.
     private boolean isLastLetter()
     {
@@ -323,14 +342,15 @@ public class Game {
     {
         for(char charValue : cryptogram.getMapping().values())
         {
-            if(!playerSolution.containsKey(charValue))
+            if(!playerSolution.containsKey(charValue - 'A' + 1))
             {
                 for(int letterInteger : cryptogram.getMapping().keySet())
                 {
                     if(cryptogram.getMapping().get(letterInteger) == charValue)
                     {
                         char letterChar = (char)(letterInteger + 'A' - 1);
-                        playerSolution.put(letterInteger, charValue);
+                        int charInt = charValue - 'A' + 1;
+                        playerSolution.put(charInt, letterChar);
                         System.out.println("Hint: " + letterChar + " is mapped to " + charValue + ".");
                         return;
                     }
