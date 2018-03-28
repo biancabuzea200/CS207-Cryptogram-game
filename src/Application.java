@@ -7,11 +7,14 @@ public class Application {
         Players players = Players.getInstance();
         players.loadPlayers();
 
+        SavedGames.getInstance().loadGames();
+
         game.loadPlayer();
         Player player = game.getCurrentPlayer();
 
         //run application for this player
         boolean applicationRunning = true;
+        boolean commandSuccess;
         Scanner reader = new Scanner(System.in);
         String line = "";
 
@@ -24,10 +27,14 @@ public class Application {
             switch(line.toLowerCase())
             {
                 case "play game":
+                    game.startNewGame();
                      game.playGame();
                      break;
                  case "load game":
-                     game.loadGame();
+                     commandSuccess = game.loadGame();
+                     // TODO: should we playGame here?
+                     if (commandSuccess)
+                         game.playGame();
                      break;
                 case "view scoreboard":
                     players.viewScoreboard();

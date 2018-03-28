@@ -1,7 +1,4 @@
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class Game {
     ////////////////////////////////////////
@@ -46,14 +43,63 @@ public class Game {
 
     // testing stuff for now
 
+    public void startNewGame()
+    {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("What kind of cryptogram would you like to solve? Please select a number:");
+        System.out.println("1) Number Cryptogram: 5 3 2 9  4 7 1 26 3 4  ...");
+        System.out.println("2) Letter Cryptogram: A U W Y  V C J F R V  ...");
+
+        // default to number mapping
+        isLetterMapping = false;
+
+        String line = scanner.nextLine();
+        if (line == null || line.isEmpty())
+        {
+            System.out.println("You didn't enter anything, so a number cryptogram will be used.");
+        }
+        else if (line.equals("1"))
+        {
+            isLetterMapping = false;
+        }
+        else if (line.equals("2"))
+        {
+            isLetterMapping = true;
+        }
+        else
+        {
+            System.out.println("You entered an invalid choice, so a number cryptogram will be used.");
+        }
+
+        // default to pop culture
+        boolean isPop = true;
+        System.out.println("What type of quote do you want for your puzzle? Please select a number:");
+        System.out.println("1) A Pop Culture Quote");
+        System.out.println("2) A Historical Quote");
+
+        line = scanner.nextLine();
+        if (line == null || line.isEmpty())
+        {
+            System.out.println("You didn't enter anything, so you will get a pop culture quote.");
+        }
+        else if (line.equals("1"))
+        {
+            isPop = true;
+        }
+        else if (line.equals("2"))
+        {
+            isPop = false;
+        }
+        else
+        {
+            System.out.println("You entered an invalid choice, so you will get a pop culture quote.");
+        }
+
+        // TODO: we need to use the different quote types
+        generateCryptogram();
+    }
 
     public void playGame() {
-        // For now we just start a new game, and assume that number mapping
-        // is being used
-        isLetterMapping = true;
-        generateCryptogram();
-
-        secondsTaken = 0;
         gameStartTimestamp = new Date();
 
         while(true)
@@ -78,12 +124,14 @@ public class Game {
                 checkSolution();
                 return;
             }
+            saveGame();
         }
     }
 
     public void generateCryptogram() {
         cryptogram = new Cryptogram(Cryptogram.getRandomQuote());
         playerSolution = new HashMap<Integer, Character>();
+        secondsTaken = 0;
 
         currentPlayer.incrementCryptogramsPlayed();
         displayCryptogram();
@@ -183,11 +231,71 @@ public class Game {
     }
 
     public void saveGame() {
+        System.out.println("Please enter a name for this saved game:");
+        Scanner scanner = new Scanner(System.in);
+        String line = scanner.nextLine();
+        if(line == null || line.isEmpty())
+        {
+            System.out.println("Game not saved!");
+            return;
+        }
 
+        String gameData = saveGameToString();
+        SavedGames.getInstance().addGame(currentPlayer.getName(), line, gameData);
+        SavedGames.getInstance().saveGames();
+        System.out.println("Your game has been saved!");
+
+        // TODO: Should we quit the game back to the main menu after this happens?
     }
 
-    public void loadGame() {
+    public boolean loadGame() {
+        Set<String> gameNameSet = SavedGames.getInstance().getGamesForPlayer(currentPlayer.getName());
+        String[] gameNames = gameNameSet.toArray(new String[0]);
 
+        if (gameNames.length == 0)
+        {
+            System.out.println("You have no saved games to load!");
+            return false;
+        }
+
+        System.out.println("Which game would you like to load? Type in the number:");
+        for (int i = 0; i < gameNames.length; i++)
+        {
+            System.out.print(i + 1);
+            System.out.println(") " + gameNames[i]);
+        }
+
+        Scanner scanner = new Scanner(System.in);
+        String line = scanner.nextLine();
+        if(line == null || line.isEmpty())
+        {
+            System.out.println("You must enter a number!");
+            return false;
+        }
+        int gameNum;
+        try
+        {
+            gameNum = Integer.parseInt(line, 10);
+        }
+        catch (NumberFormatException ex)
+        {
+            System.out.println("You must enter a number!");
+            return false;
+        }
+
+        if(gameNum <= 0 || gameNum > gameNames.length)
+        {
+            System.out.println("You must enter a number between 1 and " + gameNames.length + "!");
+            return false;
+        }
+
+        String gameName = gameNames[gameNum - 1];
+        String gameData = SavedGames.getInstance().getGame(currentPlayer.getName(), gameName);
+        System.out.println("OK, loading game " + gameName + "...");
+        loadGameFromString(gameData);
+        System.out.println("Done!");
+        displayCryptogram();
+        return true;
     }
 
     public Player getCurrentPlayer() {
