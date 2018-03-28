@@ -13,8 +13,12 @@ public class Game {
     private Player currentPlayer;
     private Players players;
 
-    private int secondsTaken;
+    // Timestamp where we started tracking the current play session
     private Date gameStartTimestamp;
+
+    // Seconds recorded for this games in previous play sessions
+    // (i.e. if the game was saved and later loaded again)
+    private int secondsTaken;
 
     // Width of the console so that we can split long quotes up onto multiple
     // lines
@@ -49,6 +53,7 @@ public class Game {
         isLetterMapping = true;
         generateCryptogram();
 
+        secondsTaken = 0;
         gameStartTimestamp = new Date();
 
         while(true)
@@ -130,6 +135,44 @@ public class Game {
         return 0;
     }
 
+    // Turn the current game state into a string that we can store
+    public String saveGameToString()
+    {
+        updateSecondsTaken();
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(Cryptogram.encodeMappedQuoteToString(cryptogram.getMappedQuote()));
+        builder.append('|');
+        builder.append(Cryptogram.encodeMappingToString(cryptogram.getMapping()));
+        builder.append('|');
+        builder.append(Cryptogram.encodeMappingToString(playerSolution));
+        builder.append('|');
+        builder.append(secondsTaken);
+        builder.append('|');
+        builder.append(isLetterMapping ? 'L' : 'N');
+
+        return builder.toString();
+    }
+
+    // Replace the current game state with one loaded from a string
+    public void loadGameFromString(String str)
+    {
+        String[] pieces = str.split("[|]");
+
+        if (pieces.length != 5)
+            throw new IllegalArgumentException("saved game format invalid");
+
+        int[] mappedQuote = Cryptogram.decodeMappedQuoteFromString(pieces[0]);
+        Map<Integer, Character> mapping = Cryptogram.decodeMappingFromString(pieces[1]);
+        cryptogram = new Cryptogram(mappedQuote, mapping);
+
+        playerSolution = Cryptogram.decodeMappingFromString(pieces[2]);
+        secondsTaken = Integer.parseInt(pieces[3], 10);
+        isLetterMapping = (pieces[4].equals("L"));
+
+        gameStartTimestamp = new Date();
+    }
+
     public void saveGame() {
 
     }
@@ -140,6 +183,17 @@ public class Game {
 
     public Player getCurrentPlayer() {
         return currentPlayer;
+    }
+
+
+    private void updateSecondsTaken()
+    {
+        long millisecondDelta = (new Date().getTime()) - gameStartTimestamp.getTime();
+        secondsTaken += (millisecondDelta / 1000);
+
+        // Reset the timestamp to now so that we won't re-record seconds we've
+        // already tracked
+        gameStartTimestamp = new Date();
     }
 
 
@@ -238,7 +292,7 @@ public class Game {
         if (playerSolution.equals(cryptogram.getMapping()))
         {
             // Game completed
-            secondsTaken += ((new Date()).getTime() - gameStartTimestamp.getTime()) / 1000;
+            updateSecondsTaken();
             System.out.println();
             System.out.println("* * * CONGRATULATIONS * * *");
             System.out.println("You have solved this cryptogram in " + secondsTaken + " seconds!");

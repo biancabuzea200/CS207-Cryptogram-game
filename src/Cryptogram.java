@@ -201,4 +201,29 @@ public class Cryptogram {
 
         return mapping;
     }
+
+    public static String encodeMappedQuoteToString(int[] quote)
+    {
+        StringBuilder builder = new StringBuilder();
+
+        for (int i = 0; i < quote.length; i++)
+        {
+            if (i > 0)
+                builder.append(',');
+            builder.append(quote[i]);
+        }
+
+        return builder.toString();
+    }
+
+    public static int[] decodeMappedQuoteFromString(String str)
+    {
+        String[] pieces = str.split("[,]");
+        int[] result = new int[pieces.length];
+
+        for (int i = 0; i < pieces.length; i++)
+            result[i] = Integer.parseInt(pieces[i], 10);
+
+        return result;
+    }
 }
