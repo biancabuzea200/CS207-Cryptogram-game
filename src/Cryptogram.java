@@ -43,6 +43,7 @@ public class Cryptogram {
             else
                 builder.append(mapping.get(mappedQuote[i]));
         }
+        originalQuote = builder.toString();
     }
 
 
