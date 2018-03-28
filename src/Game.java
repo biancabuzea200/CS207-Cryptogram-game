@@ -1,3 +1,4 @@
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -11,6 +12,9 @@ public class Game {
 
     private Player currentPlayer;
     private Players players;
+
+    private int secondsTaken;
+    private Date gameStartTimestamp;
 
     // Width of the console so that we can split long quotes up onto multiple
     // lines
@@ -45,6 +49,8 @@ public class Game {
         isLetterMapping = true;
         generateCryptogram();
 
+        gameStartTimestamp = new Date();
+
         while(true)
         {
             enterLetter();
@@ -65,6 +71,7 @@ public class Game {
         cryptogram = new Cryptogram(Cryptogram.getRandomQuote());
         playerSolution = new HashMap<Integer, Character>();
 
+        currentPlayer.incrementCryptogramsPlayed();
         displayCryptogram();
     }
 
@@ -226,9 +233,29 @@ public class Game {
         System.out.println(userInputLine.toString());
     }
 
-    private void checkSolution()
+    private boolean checkSolution()
     {
-
+        if (playerSolution.equals(cryptogram.getMapping()))
+        {
+            // Game completed
+            secondsTaken += ((new Date()).getTime() - gameStartTimestamp.getTime()) / 1000;
+            System.out.println();
+            System.out.println("* * * CONGRATULATIONS * * *");
+            System.out.println("You have solved this cryptogram in " + secondsTaken + " seconds!");
+            currentPlayer.updateAccuracy(true);
+            currentPlayer.updateAverageCompletionTime(secondsTaken);
+            currentPlayer.incrementCryptogramsCompleted();
+            return true;
+        }
+        else
+        {
+            // Solution incorrect
+            System.out.println();
+            System.out.println("* * * TRY AGAIN * * *");
+            System.out.println("Your solution is incorrect. Please try again.");
+            currentPlayer.updateAccuracy(false);
+            return false;
+        }
     }
 
     // Checks if player's solution is same size as mapping.
