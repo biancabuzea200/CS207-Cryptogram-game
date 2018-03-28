@@ -35,7 +35,7 @@ public class Application {
                  case "help":
                      HelpMessages.getInstance().printHelpMessages();
                      break;
-                case "print":
+                case "print players":
                     players.printPlayers();
                     break;
                  case "exit":

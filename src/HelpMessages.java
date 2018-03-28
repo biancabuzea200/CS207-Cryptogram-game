@@ -10,6 +10,7 @@ public class HelpMessages {
         helpMessages.add("=====HELP=====");
         helpMessages.add("\"play game\" - allows you to start a new game");
         helpMessages.add("\"load game\" - allows you to load a previously saved game");
+        helpMessages.add("\"print players\" - prints the list of players");
         helpMessages.add("\"view scoreboard\" - allows you to view the players scoreboard");
         helpMessages.add("\"exit\" - exits the application");
 

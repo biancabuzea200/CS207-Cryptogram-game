@@ -157,7 +157,7 @@ public class Players {
     {
         for (Player pl : allPlayers)
         {
-            System.out.println("player <" + pl.getName() + "," + pl.getCorrectGuesses() + "," + pl.getTotalGuesses() + "," + pl.getTotalCompletionTime() + "," + pl.getNumCryptogramsPlayed() + "," + pl.getNumCryptogramsCompleted() + ">");
+            System.out.println("player <" + pl.getName() + ">");
         }
     }
 
