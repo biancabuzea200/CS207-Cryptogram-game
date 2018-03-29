@@ -121,8 +121,10 @@ public class Game {
             int choice = input.readNumber("Choice:", 1, 2);
             if (choice == 1)
                 enterLetter();
-            else
+            else {
+                playerSolution.remove(alreadyUsed);
                 playerSolution.put(keyInteger, value);
+            }
         }
         else
         {
@@ -144,7 +146,7 @@ public class Game {
     }
 
     // Turn the current game state into a string that we can store
-    public String saveGameToString()
+    public String saveGameToString(boolean includeStateOfPlay)
     {
         updateSecondsTaken();
 
@@ -153,9 +155,16 @@ public class Game {
         builder.append('|');
         builder.append(Cryptogram.encodeMappingToString(cryptogram.getMapping()));
         builder.append('|');
-        builder.append(Cryptogram.encodeMappingToString(playerSolution));
-        builder.append('|');
-        builder.append(secondsTaken);
+        if (includeStateOfPlay) {
+            builder.append(Cryptogram.encodeMappingToString(playerSolution));
+            builder.append('|');
+            builder.append(secondsTaken);
+        } else {
+            // just include an empty state
+            // no mappings, no time taken
+            builder.append(Cryptogram.encodeMappingToString(new HashMap<>()));
+            builder.append("|0");
+        }
         builder.append('|');
         builder.append(isLetterMapping ? 'L' : 'N');
 
@@ -185,7 +194,13 @@ public class Game {
     public void saveGame() {
         String gameName = input.readLine("Please enter a name for this saved game:");
 
-        String gameData = saveGameToString();
+        System.out.println("Would you like to save the state of play?");
+        System.out.println("1) No, just save the puzzle");
+        System.out.println("2) Yes, include the progress as well");
+        int choice = input.readNumber("Choice:", 1, 2);
+        boolean includeStateOfPlay = (choice == 1);
+
+        String gameData = saveGameToString(includeStateOfPlay);
         SavedGames.getInstance().addGame(currentPlayer.getName(), gameName, gameData);
         SavedGames.getInstance().saveGames();
         System.out.println("Your game has been saved!");
