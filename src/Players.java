@@ -233,7 +233,7 @@ public class Players {
         int i = 0;
         for(Player player: allPlayers)
         {
-            String output = String.format("%-15s %7.3f \t\t\t %3.3f \t\t\t\t %3d \t\t\t\t\t\t\tB %3d",
+            String output = String.format("%-15s %7.3f \t\t\t %3.3f \t\t\t\t %3d \t\t\t\t\t\t\t %3d",
                                           player.getName(), player.getAverageTime(), player.getAccuracy(),
                                           player.getNumCryptogramsPlayed(), player.getNumCryptogramsCompleted());
             System.out.println(output);

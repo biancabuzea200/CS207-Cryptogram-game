@@ -20,9 +20,10 @@ public class HelpMessages {
     {
         System.out.println("======= HELP =======");
         System.out.println("\"enter letter\" - insert a new letter");
-        System.out.println("\"undo letter\" - clear a leter");
+        System.out.println("\"undo letter\" - clear a letter");
         System.out.println("\"get hint\" - reveals a letter");
         System.out.println("\"save game\" - saves your progress");
+        System.out.println("\"exit\" - exits the current game and returns to the main menu");
         System.out.println("\"help\" - get the help list");
     }
 

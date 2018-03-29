@@ -19,7 +19,7 @@ public class Game {
 
     // Width of the console so that we can split long quotes up onto multiple
     // lines
-    private static final int CONSOLE_WIDTH = 50;
+    private static final int CONSOLE_WIDTH = 80;
 
     // Handler for user input
     private Input input;
@@ -70,7 +70,7 @@ public class Game {
 
         while(true)
         {
-            System.out.println("Enter your command");
+            System.out.println("Enter your command, or type help for a list");
             switch(input.readCommand()) {
                 case 0:
                     continue;
@@ -86,11 +86,13 @@ public class Game {
                 case 4:
                     saveGame();
                     break;
+                case 5:
+                    return;
             }
             displayCryptogram();
             if(isLastLetter()) {
-                checkSolution();
-                return;
+                if (checkSolution())
+                    return;
             }
         }
     }
@@ -208,14 +210,12 @@ public class Game {
         System.out.println("1) No, just save the puzzle");
         System.out.println("2) Yes, include the progress as well");
         int choice = input.readNumber("Choice:", 1, 2);
-        boolean includeStateOfPlay = (choice == 1);
+        boolean includeStateOfPlay = (choice == 2);
 
         String gameData = saveGameToString(includeStateOfPlay);
         SavedGames.getInstance().addGame(currentPlayer.getName(), gameName, gameData);
         SavedGames.getInstance().saveGames();
         System.out.println("Your game has been saved!");
-
-        // TODO: Should we quit the game back to the main menu after this happens?
     }
 
     public boolean loadGame() {

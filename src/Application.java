@@ -21,7 +21,7 @@ public class Application {
 
         while(applicationRunning)
         {
-            System.out.println("What do you want to do?");
+            System.out.println("What do you want to do? Type help and press Enter for a list of commands:");
             System.out.print("<" + player.getName() + ">");
             line = reader.nextLine();
             switch(line.toLowerCase())
@@ -32,7 +32,6 @@ public class Application {
                      break;
                  case "load game":
                      commandSuccess = game.loadGame();
-                     // TODO: should we playGame here?
                      if (commandSuccess)
                          game.playGame();
                      break;

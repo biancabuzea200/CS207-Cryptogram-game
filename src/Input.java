@@ -57,6 +57,8 @@ public class Input {
                 return 3;
             case "save game":
                 return 4;
+            case "exit":
+                return 5;
             default:
                 System.err.println("Wrong command");
                 return 0;
