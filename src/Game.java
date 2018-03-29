@@ -94,6 +94,17 @@ public class Game {
         displayCryptogram();
     }
 
+    private int checkIfMappingUsed(char value)
+    {
+        for (Map.Entry<Integer, Character> e : playerSolution.entrySet())
+        {
+            if (e.getValue() == value)
+                return e.getKey();
+        }
+
+        return 0;
+    }
+
     public void enterLetter() {
         System.out.println("Please select a letter from the Cryptogram to map a value to it.");
         int keyInteger = input.readLetterOrNumber("Letter:");
@@ -101,13 +112,32 @@ public class Game {
         System.out.println("What letter would you like to enter/change it to?");
         char value = input.readLetter("Letter:");
 
-        playerSolution.put(keyInteger, value);
+        int alreadyUsed = checkIfMappingUsed(value);
+        if (alreadyUsed > 0)
+        {
+            System.out.println("You have already used this letter in your solution! What do you want to do?");
+            System.out.println("1) Pick something different to enter");
+            System.out.println("2) Remove this letter from your solution");
+            int choice = input.readNumber("Choice:", 1, 2);
+            if (choice == 1)
+                enterLetter();
+            else
+                playerSolution.put(keyInteger, value);
+        }
+        else
+        {
+            playerSolution.put(keyInteger, value);
+        }
     }
 
     public void undoLetter() {
         System.out.println("Please select a letter from the Cryptogram to remove its mapped value.");
         int keyInteger = input.readLetterOrNumber("Clear Letter:");
-        playerSolution.remove(keyInteger);
+
+        if (playerSolution.containsKey(keyInteger))
+            playerSolution.remove(keyInteger);
+        else
+            System.out.println("You didn't have anything mapped to that!");
     }
 
     public void viewFrequencies() {
