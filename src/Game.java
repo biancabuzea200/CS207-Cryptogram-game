@@ -170,10 +170,10 @@ public class Game {
             if(isLetterMapping)
             {
                 char charValue = (char)(key + 'A' - 1);
-                System.out.print("[" + charValue + "] = " + frequencies.get(key));
+                System.out.print("[" + charValue + "]=" + frequencies.get(key) + "  ");
             }
             else {
-                System.out.print("[" + key + "] = " + frequencies.get(key));
+                System.out.print("[" + key + "]=" + frequencies.get(key) + "  ");
             }
         }
         System.out.println();
