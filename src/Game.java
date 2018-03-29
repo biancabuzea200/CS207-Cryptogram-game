@@ -88,6 +88,9 @@ public class Game {
                     break;
                 case 5:
                     return;
+                case 6:
+                    viewFrequencies();
+                    break;
             }
             displayCryptogram();
             if(isLastLetter()) {
@@ -155,6 +158,18 @@ public class Game {
     }
 
     public void viewFrequencies() {
+        HashMap<Integer, Integer> frequencies = (HashMap<Integer, Integer>) cryptogram.getFrequencies();
+        for(int key : frequencies.keySet()) {
+            if(isLetterMapping)
+            {
+                char charValue = (char)(key + 'A' - 1);
+                System.out.print("[" + charValue + "] = " + frequencies.get(key));
+            }
+            else {
+                System.out.print("[" + key + "] = " + frequencies.get(key));
+            }
+        }
+        System.out.println();
     }
 
     // Turn the current game state into a string that we can store

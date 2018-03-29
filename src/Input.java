@@ -59,6 +59,8 @@ public class Input {
                 return 4;
             case "exit":
                 return 5;
+            case "view frequencies":
+                return 6;
             default:
                 System.err.println("Wrong command");
                 return 0;
