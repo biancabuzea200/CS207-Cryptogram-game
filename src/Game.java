@@ -371,22 +371,36 @@ public class Game {
     // gets a hint (fills one letter in the solution that a player hasn't mapped a value to
     private void getHint()
     {
-        for(char charValue : cryptogram.getMapping().values())
+        // figure out which possibilities we can hint
+        Collection<Integer> usedKeys = playerSolution.keySet();
+        Collection<Character> usedValues = playerSolution.values();
+        ArrayList<Map.Entry<Integer, Character>> possibilities = new ArrayList<>();
+
+        for (Map.Entry<Integer, Character> e : cryptogram.getMapping().entrySet())
         {
-            if(!playerSolution.containsKey(charValue - 'A' + 1))
-            {
-                for(int letterInteger : cryptogram.getMapping().keySet())
-                {
-                    if(cryptogram.getMapping().get(letterInteger) == charValue)
-                    {
-                        char letterChar = (char)(letterInteger + 'A' - 1);
-                        int charInt = charValue - 'A' + 1;
-                        playerSolution.put(charInt, letterChar);
-                        System.out.println("Hint: " + letterChar + " is mapped to " + charValue + ".");
-                        return;
-                    }
-                }
-            }
+            if (!usedKeys.contains(e.getKey()) && !usedValues.contains(e.getValue()))
+                possibilities.add(e);
+        }
+
+        if (possibilities.isEmpty())
+        {
+            System.out.println("There are no possible hints left, you must remove an incorrect mapping first!");
+        }
+        else
+        {
+            int index = new Random().nextInt(possibilities.size());
+            Map.Entry<Integer, Character> e = possibilities.get(index);
+
+            playerSolution.put(e.getKey(), e.getValue());
+
+            System.out.print("Hint: ");
+            if (isLetterMapping)
+                System.out.print((char)(e.getKey() + 'A' - 1));
+            else
+                System.out.print(e.getKey());
+            System.out.print(" is mapped to ");
+            System.out.print(e.getValue());
+            System.out.println(".");
         }
     }
 
