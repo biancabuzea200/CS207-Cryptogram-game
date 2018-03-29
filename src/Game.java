@@ -318,9 +318,29 @@ public class Game {
             System.out.println(") " + gameNames[i]);
         }
 
-    }
+        Scanner scanner = new Scanner(System.in);
+        String line = scanner.nextLine();
+        if(line == null || line.isEmpty())
+        {
+            System.out.println("You must enter a number!");
+            return false;
+        }
+        int gameNum;
+        try
+        {
+            gameNum = Integer.parseInt(line, 10);
+        }
+        catch (NumberFormatException ex)
+        {
+            System.out.println("You must enter a number!");
+            return false;
+        }
 
-    public void loadGame() {
+        if(gameNum <= 0 || gameNum > gameNames.length)
+        {
+            System.out.println("You must enter a number between 1 and " + gameNames.length + "!");
+            return false;
+        }
 
         String gameName = gameNames[gameNum - 1];
         String gameData = SavedGames.getInstance().getGame(currentPlayer.getName(), gameName);
@@ -330,6 +350,7 @@ public class Game {
         displayCryptogram();
         return true;
     }
+
 
     public Player getCurrentPlayer() {
         return currentPlayer;
