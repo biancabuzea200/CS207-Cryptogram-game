@@ -31,7 +31,7 @@ public class Input {
         {
             System.out.print(prompt);
             String line = scanner.nextLine();
-            if (line.toLowerCase() == "help")
+            if (line.toLowerCase().equals("help"))
             {
                 HelpMessages.printGameHelp();
             }
