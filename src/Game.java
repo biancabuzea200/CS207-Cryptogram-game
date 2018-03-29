@@ -83,14 +83,15 @@ public class Game {
                 case 3:
                     undoLetter();
                     break;
+                case 4:
+                    saveGame();
+                    break;
             }
             displayCryptogram();
-            if(isLastLetter())
-            {
+            if(isLastLetter()) {
                 checkSolution();
                 return;
             }
-            saveGame();
         }
     }
 

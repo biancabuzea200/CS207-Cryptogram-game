@@ -22,6 +22,7 @@ public class HelpMessages {
         System.out.println("\"enter letter\" - insert a new letter");
         System.out.println("\"undo letter\" - clear a leter");
         System.out.println("\"get hint\" - reveals a letter");
+        System.out.println("\"save game\" - saves your progress");
         System.out.println("\"help\" - get the help list");
     }
 

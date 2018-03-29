@@ -55,6 +55,8 @@ public class Input {
                 return 2;
             case "undo letter":
                 return 3;
+            case "save game":
+                return 4;
             default:
                 System.err.println("Wrong command");
                 return 0;
