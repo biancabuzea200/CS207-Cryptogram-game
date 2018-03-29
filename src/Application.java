@@ -42,9 +42,6 @@ public class Application {
                  case "help":
                      HelpMessages.getInstance().printHelpMessages();
                      break;
-                case "print players":
-                    players.printPlayers();
-                    break;
                  case "exit":
                      applicationRunning = false;
                      continue;

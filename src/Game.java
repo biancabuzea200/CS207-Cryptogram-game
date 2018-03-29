@@ -160,28 +160,6 @@ public class Game {
         displayCryptogram();
     }
 
-    private int printHelp()
-    {
-        System.out.println("======= HELP =======");
-        System.out.println("\"continue\" - continue the game");
-        System.out.println("\"new cryptogram\" - discard the current cryptogram and generate a new one");
-        System.out.println("\"exit\" - exit the game and return to main page");
-
-        Scanner scanner = new Scanner(System.in);
-        String line = scanner.nextLine().toLowerCase();
-        switch (line) {
-            case "continue":
-                return -1;
-            case "new cryptogram":
-                return -2;
-            case "exit":
-                return -3;
-            default:
-                System.out.println("Wrong command");
-                return 0;
-        }
-    }
-
     public int enterLetter() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please select a letter from the Cryptogram to map a value to it.");
@@ -189,7 +167,7 @@ public class Game {
         String line = scanner.nextLine().toUpperCase();
         if(line.equals("HELP"))
         {
-            return printHelp();
+            return HelpMessages.printGameHelp();
         }
         if(line == null)
         {
@@ -225,7 +203,7 @@ public class Game {
         String line = scanner.nextLine().toUpperCase();
         if(line.equals("HELP"))
         {
-            return printHelp();
+            return HelpMessages.printGameHelp();
         }
         if(line == null)
         {
