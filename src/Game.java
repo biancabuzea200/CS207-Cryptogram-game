@@ -21,15 +21,18 @@ public class Game {
     // lines
     private static final int CONSOLE_WIDTH = 50;
 
+    // Handler for user input
+    private Input input;
+
     public Game() {
         players = Players.getInstance();
+        input = Input.getInstance();
     }
 
+
+
     public void loadPlayer() {
-        Scanner scanner = new Scanner(System.in);
-        String username;
-        System.out.println("Please select your username:");
-        username = scanner.nextLine();
+        String username = input.readLine("Please select your username:");
         Player player = new Player(username);
         Player p = players.findPlayer(player);
         if (p == null) {
@@ -41,59 +44,22 @@ public class Game {
         System.out.println("Player <" + player.getName() + "> loaded.");
     }
 
-    // testing stuff for now
-
     public void startNewGame()
     {
-        Scanner scanner = new Scanner(System.in);
         System.out.println("What kind of cryptogram would you like to solve? Please select a number:");
         System.out.println("1) Number Cryptogram: 5 3 2 9  4 7 1 26 3 4  ...");
         System.out.println("2) Letter Cryptogram: A U W Y  V C J F R V  ...");
 
-        // default to number mapping
-        isLetterMapping = false;
+        int mappingChoice = input.readNumber("Choice:", 1, 2);
+        isLetterMapping = (mappingChoice == 2);
+        input.setLetterMapping(isLetterMapping);
 
-        String line = scanner.nextLine();
-        if (line == null || line.isEmpty())
-        {
-            System.out.println("You didn't enter anything, so a number cryptogram will be used.");
-        }
-        else if (line.equals("1"))
-        {
-            isLetterMapping = false;
-        }
-        else if (line.equals("2"))
-        {
-            isLetterMapping = true;
-        }
-        else
-        {
-            System.out.println("You entered an invalid choice, so a number cryptogram will be used.");
-        }
-
-        // default to pop culture
-        boolean isPop = true;
         System.out.println("What type of quote do you want for your puzzle? Please select a number:");
         System.out.println("1) A Pop Culture Quote");
         System.out.println("2) A Historical Quote");
 
-        line = scanner.nextLine();
-        if (line == null || line.isEmpty())
-        {
-            System.out.println("You didn't enter anything, so you will get a pop culture quote.");
-        }
-        else if (line.equals("1"))
-        {
-            isPop = true;
-        }
-        else if (line.equals("2"))
-        {
-            isPop = false;
-        }
-        else
-        {
-            System.out.println("You entered an invalid choice, so you will get a pop culture quote.");
-        }
+        int quoteChoice = input.readNumber("Choice:", 1, 2);
+        boolean isPop = (quoteChoice == 1);
 
         // TODO: we need to use the different quote types
         generateCryptogram();
@@ -104,43 +70,11 @@ public class Game {
 
         while(true)
         {
-            switch(enterLetter())
-            {
-                case 0:
-                    break;
-                case -1:
-                    continue;
-                case -2:
-                    isLetterMapping = true;
-                    generateCryptogram();
-
-                    secondsTaken = 0;
-                    gameStartTimestamp = new Date();
-
-                    continue;
-                case -3:
-                    return;
-            }
+            enterLetter();
             displayCryptogram();
             getHint();
             displayCryptogram();
-            switch(undoLetter())
-            {
-                case 0:
-                    break;
-                case -1:
-                    continue;
-                case -2:
-                    isLetterMapping = true;
-                    generateCryptogram();
-
-                    secondsTaken = 0;
-                    gameStartTimestamp = new Date();
-
-                    continue;
-                case -3:
-                    return;
-            }
+            undoLetter();
             displayCryptogram();
             if(isLastLetter())
             {
@@ -153,74 +87,30 @@ public class Game {
 
     public void generateCryptogram() {
         cryptogram = new Cryptogram(Cryptogram.getRandomQuote());
-        playerSolution = new HashMap<Integer, Character>();
+        playerSolution = new HashMap<>();
         secondsTaken = 0;
 
         currentPlayer.incrementCryptogramsPlayed();
         displayCryptogram();
     }
 
-    public int enterLetter() {
-        Scanner scanner = new Scanner(System.in);
+    public void enterLetter() {
         System.out.println("Please select a letter from the Cryptogram to map a value to it.");
-        System.out.print("Letter:");
-        String line = scanner.nextLine().toUpperCase();
-        if(line.equals("HELP"))
-        {
-            return HelpMessages.printGameHelp();
-        }
-        if(line == null)
-        {
-            return -1;
-        }
-        char keyChar = line.charAt(0);
-        if(line.length() != 1)
-        {
-            System.err.println("Incorrect letter!");
-        }
-        int keyInteger = (keyChar - 'A' + 1);
-        System.out.println("What enter would you like to enter/change it to?");
-        System.out.print("Letter:");
-        line = scanner.nextLine().toUpperCase();
-        if(line == null)
-        {
-            return -1;
-        }
-        char value = line.charAt(0);
-        if(line.length() != 1)
-        {
-            System.err.println("Incorrect letter!");
-        }
+        int keyInteger = input.readLetterOrNumber("Letter:");
+
+        System.out.println("What letter would you like to enter/change it to?");
+        char value = input.readLetter("Letter:");
 
         playerSolution.put(keyInteger, value);
-        return 0;
     }
 
-    public int undoLetter() {
-        Scanner scanner = new Scanner(System.in);
+    public void undoLetter() {
         System.out.println("Please select a letter from the Cryptogram to remove its mapped value.");
-        System.out.print("Clear Letter:");
-        String line = scanner.nextLine().toUpperCase();
-        if(line.equals("HELP"))
-        {
-            return HelpMessages.printGameHelp();
-        }
-        if(line == null)
-        {
-            return -1;
-        }
-        char keyChar = line.charAt(0);
-        if(line.length() != 1)
-        {
-            System.err.println("Incorrect letter!");
-        }
-        int keyInteger = (keyChar - 'A' + 1);
+        int keyInteger = input.readLetterOrNumber("Clear Letter:");
         playerSolution.remove(keyInteger);
-        return 0;
     }
 
-    public int viewFrequencies() {
-        return 0;
+    public void viewFrequencies() {
     }
 
     // Turn the current game state into a string that we can store
@@ -257,22 +147,16 @@ public class Game {
         playerSolution = Cryptogram.decodeMappingFromString(pieces[2]);
         secondsTaken = Integer.parseInt(pieces[3], 10);
         isLetterMapping = (pieces[4].equals("L"));
+        input.setLetterMapping(isLetterMapping);
 
         gameStartTimestamp = new Date();
     }
 
     public void saveGame() {
-        System.out.println("Please enter a name for this saved game:");
-        Scanner scanner = new Scanner(System.in);
-        String line = scanner.nextLine();
-        if(line == null || line.isEmpty())
-        {
-            System.out.println("Game not saved!");
-            return;
-        }
+        String gameName = input.readLine("Please enter a name for this saved game:");
 
         String gameData = saveGameToString();
-        SavedGames.getInstance().addGame(currentPlayer.getName(), line, gameData);
+        SavedGames.getInstance().addGame(currentPlayer.getName(), gameName, gameData);
         SavedGames.getInstance().saveGames();
         System.out.println("Your game has been saved!");
 
@@ -296,30 +180,7 @@ public class Game {
             System.out.println(") " + gameNames[i]);
         }
 
-        Scanner scanner = new Scanner(System.in);
-        String line = scanner.nextLine();
-        if(line == null || line.isEmpty())
-        {
-            System.out.println("You must enter a number!");
-            return false;
-        }
-        int gameNum;
-        try
-        {
-            gameNum = Integer.parseInt(line, 10);
-        }
-        catch (NumberFormatException ex)
-        {
-            System.out.println("You must enter a number!");
-            return false;
-        }
-
-        if(gameNum <= 0 || gameNum > gameNames.length)
-        {
-            System.out.println("You must enter a number between 1 and " + gameNames.length + "!");
-            return false;
-        }
-
+        int gameNum = input.readNumber("Game:", 1, gameNames.length);
         String gameName = gameNames[gameNum - 1];
         String gameData = SavedGames.getInstance().getGame(currentPlayer.getName(), gameName);
         System.out.println("OK, loading game " + gameName + "...");
