@@ -61,6 +61,8 @@ public class Input {
                 return 5;
             case "view frequencies":
                 return 6;
+            case "show solution":
+                return 7;
             default:
                 System.err.println("Wrong command");
                 return 0;

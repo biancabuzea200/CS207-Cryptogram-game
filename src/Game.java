@@ -61,8 +61,15 @@ public class Game {
         int quoteChoice = input.readNumber("Choice:", 1, 2);
         boolean isPop = (quoteChoice == 1);
 
+        System.out.println("How long of a quote do you want for your puzzle (over 15 characters or under)? Please select a number:");
+        System.out.println("1) A short one");
+        System.out.println("2) A long one");
+
+        int lengthQuoteChoice = input.readNumber("Choice:", 1, 2);
+        boolean isQuoteLong = (quoteChoice == 2);
+
         // TODO: we need to use the different quote types
-        generateCryptogram(quoteChoice);
+        generateCryptogram(quoteChoice, isQuoteLong);
     }
 
     public void playGame() {
@@ -91,6 +98,9 @@ public class Game {
                 case 6:
                     viewFrequencies();
                     break;
+                case 7:
+                    showSolution();
+                    break;
             }
             displayCryptogram();
             if(isLastLetter()) {
@@ -100,14 +110,14 @@ public class Game {
         }
     }
 
-    public void generateCryptogram(int quoteChoice) {
+    public void generateCryptogram(int quoteChoice, boolean isLong) {
         if(quoteChoice == 1)
         {
-            cryptogram = new Cryptogram(Cryptogram.getRandomQuote("pop"));
+            cryptogram = new Cryptogram(Cryptogram.getRandomQuote("pop", isLong));
         }
         else if(quoteChoice == 2)
         {
-            cryptogram = new Cryptogram(Cryptogram.getRandomQuote("historical"));
+            cryptogram = new Cryptogram(Cryptogram.getRandomQuote("historical", isLong));
         }
         playerSolution = new HashMap<>();
         secondsTaken = 0;
@@ -170,10 +180,10 @@ public class Game {
             if(isLetterMapping)
             {
                 char charValue = (char)(key + 'A' - 1);
-                System.out.print("[" + charValue + "] = " + frequencies.get(key));
+                System.out.print("[" + charValue + "]= " + frequencies.get(key) + " ");
             }
             else {
-                System.out.print("[" + key + "] = " + frequencies.get(key));
+                System.out.print("[" + key + "]= " + frequencies.get(key) + " ");
             }
         }
         System.out.println();

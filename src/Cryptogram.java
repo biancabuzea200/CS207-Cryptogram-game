@@ -108,7 +108,7 @@ public class Cryptogram {
 
     // Load a random quote from the quotes database
     // (TODO: Select one depending on type -- historical or pop culture)
-    public static String getRandomQuote(String type)
+    public static String getRandomQuote(String type, boolean isLong)
     {
         String[] quotes = new String[50];
         String line;
@@ -135,15 +135,24 @@ public class Cryptogram {
                 {
                     continue;
                 }
-                quotes[index] = line;
-                index++;
+                if(!isLong && line.chars().distinct().count() <= 15) {
+                    quotes[index] = line;
+                    index++;
+                }
+                if(isLong && line.chars().distinct().count() > 15) {
+                    quotes[index] = line;
+                    index++;
+                }
             }
         }
         catch (FileNotFoundException e)
         {
             System.err.println("Error opening the file: " + quotesFile.getName());
         }
-
+        if(quotes.length == 0) {
+            System.out.println("No quote of that length is found.");
+            return null;
+        }
         Random random = new Random();
         int randomIndex = random.nextInt(index);
         return quotes[randomIndex];
