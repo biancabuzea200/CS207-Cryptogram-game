@@ -42,6 +42,25 @@ public class Input {
         }
     }
 
+    public int readCommand()
+    {
+        String input = scanner.nextLine();
+        switch(input) {
+            case "help":
+                HelpMessages.printGameHelp();
+                return 0;
+            case "enter letter":
+                return 1;
+            case "get hint":
+                return 2;
+            case "undo letter":
+                return 3;
+            default:
+                System.err.println("Wrong command");
+                return 0;
+        }
+    }
+
     // Read a number from the input
     public int readNumber(String prompt, int min, int max)
     {

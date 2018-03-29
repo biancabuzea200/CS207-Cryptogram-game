@@ -16,26 +16,13 @@ public class HelpMessages {
 
     }
 
-    public static int printGameHelp()
+    public static void printGameHelp()
     {
         System.out.println("======= HELP =======");
-        System.out.println("\"continue\" - continue the game");
-        System.out.println("\"new cryptogram\" - discard the current cryptogram and generate a new one");
-        System.out.println("\"exit\" - exit the game and return to main page");
-
-        Scanner scanner = new Scanner(System.in);
-        String line = scanner.nextLine().toLowerCase();
-        switch (line) {
-            case "continue":
-                return -1;
-            case "new cryptogram":
-                return -2;
-            case "exit":
-                return -3;
-            default:
-                System.out.println("Wrong command");
-                return 0;
-        }
+        System.out.println("\"enter letter\" - insert a new letter");
+        System.out.println("\"undo letter\" - clear a leter");
+        System.out.println("\"get hint\" - reveals a letter");
+        System.out.println("\"help\" - get the help list");
     }
 
     public static HelpMessages getInstance()

@@ -70,11 +70,20 @@ public class Game {
 
         while(true)
         {
-            enterLetter();
-            displayCryptogram();
-            getHint();
-            displayCryptogram();
-            undoLetter();
+            System.out.println("Enter your command");
+            switch(input.readCommand()) {
+                case 0:
+                    continue;
+                case 1:
+                    enterLetter();
+                    break;
+                case 2:
+                    getHint();
+                    break;
+                case 3:
+                    undoLetter();
+                    break;
+            }
             displayCryptogram();
             if(isLastLetter())
             {
