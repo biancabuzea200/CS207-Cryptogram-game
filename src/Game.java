@@ -62,7 +62,7 @@ public class Game {
         boolean isPop = (quoteChoice == 1);
 
         // TODO: we need to use the different quote types
-        generateCryptogram();
+        generateCryptogram(quoteChoice);
     }
 
     public void playGame() {
@@ -100,8 +100,15 @@ public class Game {
         }
     }
 
-    public void generateCryptogram() {
-        cryptogram = new Cryptogram(Cryptogram.getRandomQuote());
+    public void generateCryptogram(int quoteChoice) {
+        if(quoteChoice == 1)
+        {
+            cryptogram = new Cryptogram(Cryptogram.getRandomQuote("pop"));
+        }
+        else if(quoteChoice == 2)
+        {
+            cryptogram = new Cryptogram(Cryptogram.getRandomQuote("historical"));
+        }
         playerSolution = new HashMap<>();
         secondsTaken = 0;
 

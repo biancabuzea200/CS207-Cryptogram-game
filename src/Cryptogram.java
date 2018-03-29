@@ -108,12 +108,23 @@ public class Cryptogram {
 
     // Load a random quote from the quotes database
     // (TODO: Select one depending on type -- historical or pop culture)
-    public static String getRandomQuote()
+    public static String getRandomQuote(String type)
     {
         String[] quotes = new String[50];
         String line;
         int index = 0;
         File quotesFile = new File("quotes.txt");
+        switch(type)
+        {
+            case "pop":
+                quotesFile = new File("pop.txt");
+                break;
+            case "historical":
+                quotesFile = new File("historical.txt");
+                break;
+            default:
+                quotesFile = new File("quotes.txt");
+        }
         try
         {
             Scanner scanner = new Scanner(quotesFile);
